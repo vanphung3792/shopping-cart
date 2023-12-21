@@ -1,3 +1,4 @@
+import { useShoppingCart } from "../context/ShoppingCartContext"
 import formatCurrency from "../utilities/formatCurrency"
 import Button from "./Button"
 
@@ -10,7 +11,13 @@ type StoreItemProps = {
 
 const StoreItem = ({ id, name, price, imgUrl }: StoreItemProps) => {
 
-    const quantity = 0
+    const {
+        getItemQuantity,
+        increaseCartQuantity,
+        decreaseCartQuantity,
+        removeFromCart
+    } = useShoppingCart()
+    const quantity = getItemQuantity(id)
 
   return (
     <div
@@ -58,6 +65,7 @@ const StoreItem = ({ id, name, price, imgUrl }: StoreItemProps) => {
                 {quantity === 0 ? (
                     <Button 
                         label="+ Add to cart" 
+                        onClick={() => increaseCartQuantity(id)}
                         fullWidth
                     />
                 ) : (
@@ -80,15 +88,24 @@ const StoreItem = ({ id, name, price, imgUrl }: StoreItemProps) => {
                                     gap-5
                                 "
                             >
-                                <Button label="-" />
+                                <Button 
+                                    label="-" 
+                                    onClick={() => decreaseCartQuantity(id)}
+                                />
                                 <div>
-                                    <span className="font-semibold text-2xl">{`1 `}</span>
+                                    <span className="font-semibold text-2xl">{`${quantity} `}</span>
                                     in cart
                                 </div>
-                                <Button label="+" />
+                                <Button 
+                                    label="+" 
+                                    onClick={() => increaseCartQuantity(id)}
+                                />
                             </div>
                             <div>
-                                <Button label="Remove" secondary />
+                                <Button 
+                                    label="Remove" secondary 
+                                    onClick={() => removeFromCart(id)}
+                                />
                             </div>
                         </div>
                     </div>
